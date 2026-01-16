@@ -60,6 +60,14 @@ npx supabase db push                    # Push migrations
 npx supabase gen types typescript --project-id kabgcmozfxmezmgoyzzq > src/lib/supabase/types.ts
 ```
 
+## Git Workflow
+
+**Direct to main** - This is a solo project.
+
+- Commit directly to `main` branch
+- Push after each logical unit of work
+- Always commit and push after completing changes
+
 ## Project-Specific Rules
 
 - **Server client MUST be awaited**: `const supabase = await createClient()`
