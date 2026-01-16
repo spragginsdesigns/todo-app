@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,10 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen antialiased">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorBackground: "#0a0a0a",
+          colorText: "#fafafa",
+          colorPrimary: "#3b82f6",
+        },
+      }}
+    >
+      <html lang="en" className="dark">
+        <body className="min-h-screen antialiased">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

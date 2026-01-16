@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,25 +11,39 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { createProject } from "@/lib/actions/projects";
+import { updateProject } from "@/lib/actions/projects";
 import { PROJECT_COLORS, PROJECT_ICONS, DEFAULT_PROJECT_ICON } from "@/lib/constants";
 import { ProjectIcon } from "./project-icon";
+import type { Project } from "@/lib/supabase/types";
 
-interface AddProjectDialogProps {
+interface EditProjectDialogProps {
+  project: Project | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) {
+export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDialogProps) {
   const [name, setName] = useState("");
-  const [color, setColor] = useState(PROJECT_COLORS[5]); // default blue
+  const [color, setColor] = useState(PROJECT_COLORS[5]);
   const [icon, setIcon] = useState(DEFAULT_PROJECT_ICON);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  // Reset form when project changes
+  useEffect(() => {
+    if (project) {
+      setName(project.name);
+      setColor(project.color || PROJECT_COLORS[5]);
+      setIcon(project.icon || DEFAULT_PROJECT_ICON);
+      setError(null);
+    }
+  }, [project]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!project) return;
 
     if (!name.trim()) {
       setError("Project name is required");
@@ -37,14 +51,15 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
     }
 
     startTransition(async () => {
-      const result = await createProject({ name: name.trim(), color, icon });
+      const result = await updateProject(project.id, {
+        name: name.trim(),
+        color,
+        icon,
+      });
 
       if (result.error) {
         setError(result.error);
       } else {
-        setName("");
-        setColor(PROJECT_COLORS[5]);
-        setIcon(DEFAULT_PROJECT_ICON);
         onOpenChange(false);
       }
     });
@@ -52,9 +67,6 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
-      setName("");
-      setColor(PROJECT_COLORS[5]);
-      setIcon(DEFAULT_PROJECT_ICON);
       setError(null);
     }
     onOpenChange(newOpen);
@@ -65,22 +77,22 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add project</DialogTitle>
+            <DialogTitle>Edit project</DialogTitle>
             <DialogDescription>
-              Create a new project to organize your tasks.
+              Update the project name, icon, and color.
             </DialogDescription>
           </DialogHeader>
 
           <div className="mt-4 space-y-4">
             <div className="space-y-2">
               <label
-                htmlFor="project-name"
+                htmlFor="edit-project-name"
                 className="text-sm font-medium text-foreground"
               >
                 Name
               </label>
               <Input
-                id="project-name"
+                id="edit-project-name"
                 placeholder="Project name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -146,7 +158,7 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Add project"}
+              {isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>
         </form>

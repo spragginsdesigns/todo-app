@@ -1,14 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserId } from "@/lib/auth/user";
 import { TodoList } from "@/components/todos/todo-list";
 import { AddTodoForm } from "@/components/todos/add-todo-form";
 
 export default async function InboxPage() {
+  const userId = await getCurrentUserId();
   const supabase = await createClient();
 
-  // Get the default inbox project
+  // Get the default inbox project for this user
   const { data: inbox } = await supabase
     .from("projects")
     .select("*")
+    .eq("user_id", userId)
     .eq("is_default", true)
     .single();
 
@@ -16,6 +19,7 @@ export default async function InboxPage() {
   let query = supabase
     .from("todos")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   // Build the filter based on whether inbox exists

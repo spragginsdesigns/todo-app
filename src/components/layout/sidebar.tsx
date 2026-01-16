@@ -2,9 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { Inbox, Calendar, CalendarDays } from "lucide-react";
+import { UserButton, SignedIn } from "@clerk/nextjs";
 import { NavItem } from "./nav-item";
 import { ProjectList } from "./project-list";
 import { AddProjectDialog } from "@/components/projects/add-project-dialog";
+import { EditProjectDialog } from "@/components/projects/edit-project-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { deleteProject } from "@/lib/actions/projects";
 import type { Project } from "@/lib/supabase/types";
@@ -22,6 +24,7 @@ interface SidebarProps {
 
 export function Sidebar({ projects, counts }: SidebarProps) {
   const [showAddProject, setShowAddProject] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [, startTransition] = useTransition();
 
   const handleDeleteProject = (projectId: string) => {
@@ -33,11 +36,24 @@ export function Sidebar({ projects, counts }: SidebarProps) {
     });
   };
 
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+  };
+
   return (
     <>
       <aside className="flex h-full w-64 flex-col border-r border-border bg-sidebar">
-        <div className="flex h-14 items-center border-b border-border px-4">
+        <div className="flex h-14 items-center justify-between border-b border-border px-4">
           <h1 className="text-lg font-semibold text-foreground">TodoIt</h1>
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-8 w-8",
+                },
+              }}
+            />
+          </SignedIn>
         </div>
 
         <ScrollArea className="flex-1">
@@ -66,6 +82,7 @@ export function Sidebar({ projects, counts }: SidebarProps) {
             <ProjectList
               projects={projects}
               onAddProject={() => setShowAddProject(true)}
+              onEditProject={handleEditProject}
               onDeleteProject={handleDeleteProject}
             />
           </nav>
@@ -75,6 +92,14 @@ export function Sidebar({ projects, counts }: SidebarProps) {
       <AddProjectDialog
         open={showAddProject}
         onOpenChange={setShowAddProject}
+      />
+
+      <EditProjectDialog
+        project={editingProject}
+        open={editingProject !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditingProject(null);
+        }}
       />
     </>
   );

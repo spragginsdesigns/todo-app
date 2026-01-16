@@ -29,3 +29,35 @@ export const PROJECT_COLORS = [
 export const DEFAULT_PROJECT_COLOR = "#6b7280";
 
 export const INBOX_PROJECT_ID = "inbox";
+
+// Available icons for projects (Lucide icon names)
+export const PROJECT_ICONS = [
+  "hash",
+  "folder",
+  "briefcase",
+  "code",
+  "book",
+  "star",
+  "heart",
+  "home",
+  "shopping-cart",
+  "music",
+  "camera",
+  "gamepad-2",
+  "plane",
+  "car",
+  "dumbbell",
+  "utensils",
+  "graduation-cap",
+  "lightbulb",
+  "palette",
+  "gift",
+  "trophy",
+  "target",
+  "rocket",
+  "zap",
+] as const;
+
+export type ProjectIconName = (typeof PROJECT_ICONS)[number];
+
+export const DEFAULT_PROJECT_ICON = "hash";

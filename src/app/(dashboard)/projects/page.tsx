@@ -1,20 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserId } from "@/lib/auth/user";
 import { ProjectCard } from "@/components/projects/project-card";
 import { AddProjectButton } from "@/components/projects/add-project-button";
 
 export default async function ProjectsPage() {
+  const userId = await getCurrentUserId();
   const supabase = await createClient();
 
   const { data: projects } = await supabase
     .from("projects")
     .select("*")
+    .eq("user_id", userId)
     .order("is_default", { ascending: false })
     .order("name", { ascending: true });
 
-  // Get task counts per project
+  // Get task counts per project for this user
   const { data: todos } = await supabase
     .from("todos")
     .select("id, project_id")
+    .eq("user_id", userId)
     .eq("completed", false);
 
   const projectsWithCounts = (projects || []).map((project) => ({

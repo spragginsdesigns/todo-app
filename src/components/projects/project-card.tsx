@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Hash, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import type { Project } from "@/lib/supabase/types";
+import { ProjectIcon } from "./project-icon";
 
 interface ProjectCardProps {
   project: Project & { taskCount: number };
@@ -19,7 +20,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           className="flex h-8 w-8 items-center justify-center rounded-md"
           style={{ backgroundColor: project.color ? `${project.color}20` : undefined }}
         >
-          <Hash className="h-4 w-4" style={{ color: project.color ?? undefined }} />
+          <ProjectIcon icon={project.icon} color={project.color} size="md" />
         </div>
         <div>
           <h3 className="font-medium text-foreground">{project.name}</h3>

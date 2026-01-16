@@ -2,11 +2,17 @@
 
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
-import { Calendar, Trash2, MoreHorizontal } from "lucide-react";
+import { Calendar as CalendarIcon, Trash2, MoreHorizontal, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +34,10 @@ export function TodoItem({ todo }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description ?? "");
+  const [editDueDate, setEditDueDate] = useState<Date | undefined>(
+    todo.due_date ? new Date(todo.due_date) : undefined
+  );
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const priority = (todo.priority ?? 4) as Priority;
@@ -52,6 +62,7 @@ export function TodoItem({ todo }: TodoItemProps) {
       await updateTodo(todo.id, {
         title: editTitle.trim(),
         description: editDescription.trim() || null,
+        due_date: editDueDate ? format(editDueDate, "yyyy-MM-dd") : null,
       });
       setIsEditing(false);
     });
@@ -60,6 +71,7 @@ export function TodoItem({ todo }: TodoItemProps) {
   const handleCancel = () => {
     setEditTitle(todo.title);
     setEditDescription(todo.description ?? "");
+    setEditDueDate(todo.due_date ? new Date(todo.due_date) : undefined);
     setIsEditing(false);
   };
 
@@ -67,6 +79,16 @@ export function TodoItem({ todo }: TodoItemProps) {
     if (e.key === "Escape") {
       handleCancel();
     }
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setEditDueDate(date);
+    setDatePickerOpen(false);
+  };
+
+  const handleClearDate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditDueDate(undefined);
   };
 
   if (isEditing) {
@@ -90,6 +112,41 @@ export function TodoItem({ todo }: TodoItemProps) {
           rows={2}
           className="mt-2 min-h-0 resize-none border-0 bg-transparent px-0 text-xs placeholder:text-muted-foreground focus-visible:ring-0"
         />
+
+        <div className="mt-3 flex items-center gap-2">
+          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isPending}
+                className={cn(
+                  "h-7 gap-1.5 text-xs",
+                  !editDueDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="h-3 w-3" />
+                {editDueDate ? format(editDueDate, "MMM d") : "Due date"}
+                {editDueDate && (
+                  <X
+                    className="h-3 w-3 hover:text-foreground"
+                    onClick={handleClearDate}
+                  />
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={editDueDate}
+                onSelect={handleDateSelect}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
         <div className="mt-3 flex items-center justify-end gap-2">
           <Button
             type="button"
@@ -154,7 +211,7 @@ export function TodoItem({ todo }: TodoItemProps) {
 
         {todo.due_date && (
           <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3" />
+            <CalendarIcon className="h-3 w-3" />
             {format(new Date(todo.due_date), "MMM d")}
           </div>
         )}

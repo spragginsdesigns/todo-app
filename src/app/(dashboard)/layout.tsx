@@ -2,23 +2,27 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { MobileHeader } from "@/components/layout/mobile-header";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUserId } from "@/lib/auth/user";
+import { ensureUserInbox } from "@/lib/actions/user-init";
 
-async function getNavCounts() {
+async function getNavCounts(userId: string) {
   const supabase = await createClient();
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Get inbox project
+  // Get inbox project for this user
   const { data: inbox } = await supabase
     .from("projects")
     .select("id")
+    .eq("user_id", userId)
     .eq("is_default", true)
     .single();
 
-  // Get all incomplete todos
+  // Get all incomplete todos for this user
   const { data: todos } = await supabase
     .from("todos")
     .select("id, project_id, due_date")
+    .eq("user_id", userId)
     .eq("completed", false);
 
   const inboxCount =
@@ -34,12 +38,13 @@ async function getNavCounts() {
   return { inbox: inboxCount, today: todayCount, upcoming: upcomingCount };
 }
 
-async function getProjects() {
+async function getProjects(userId: string) {
   const supabase = await createClient();
 
   const { data } = await supabase
     .from("projects")
     .select("*")
+    .eq("user_id", userId)
     .order("is_default", { ascending: false })
     .order("name", { ascending: true });
 
@@ -51,7 +56,15 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [projects, counts] = await Promise.all([getProjects(), getNavCounts()]);
+  const userId = await getCurrentUserId();
+
+  // Ensure user has their own Inbox project
+  await ensureUserInbox();
+
+  const [projects, counts] = await Promise.all([
+    getProjects(userId),
+    getNavCounts(userId),
+  ]);
 
   return (
     <div className="flex h-screen">

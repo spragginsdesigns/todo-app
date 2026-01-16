@@ -13,26 +13,32 @@ export type Database = {
         Row: {
           color: string | null
           created_at: string | null
+          icon: string | null
           id: string
           is_default: boolean | null
           name: string
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           color?: string | null
           created_at?: string | null
+          icon?: string | null
           id?: string
           is_default?: boolean | null
           name: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           color?: string | null
           created_at?: string | null
+          icon?: string | null
           id?: string
           is_default?: boolean | null
           name?: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -47,6 +53,7 @@ export type Database = {
           project_id: string | null
           title: string
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           completed?: boolean | null
@@ -58,6 +65,7 @@ export type Database = {
           project_id?: string | null
           title: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           completed?: boolean | null
@@ -69,6 +77,7 @@ export type Database = {
           project_id?: string | null
           title?: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {

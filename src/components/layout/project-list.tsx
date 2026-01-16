@@ -2,26 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Hash, MoreHorizontal, Plus } from "lucide-react";
+import { MoreHorizontal, Plus, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Project } from "@/lib/supabase/types";
+import { ProjectIcon } from "@/components/projects/project-icon";
 
 interface ProjectListProps {
   projects: Project[];
   onAddProject: () => void;
+  onEditProject?: (project: Project) => void;
   onDeleteProject?: (projectId: string) => void;
 }
 
 export function ProjectList({
   projects,
   onAddProject,
+  onEditProject,
   onDeleteProject,
 }: ProjectListProps) {
   const pathname = usePathname();
@@ -65,14 +69,15 @@ export function ProjectList({
                 href={`/project/${project.id}`}
                 className="flex flex-1 items-center gap-3"
               >
-                <Hash
-                  className="h-4 w-4"
-                  style={{ color: project.color || "#6b7280" }}
+                <ProjectIcon
+                  icon={project.icon}
+                  color={project.color}
+                  size="md"
                 />
                 <span className="truncate">{project.name}</span>
               </Link>
 
-              {!project.is_default && onDeleteProject && (
+              {!project.is_default && (onEditProject || onDeleteProject) && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -85,12 +90,26 @@ export function ProjectList({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      className="text-destructive focus:text-destructive"
-                      onClick={() => onDeleteProject(project.id)}
-                    >
-                      Delete project
-                    </DropdownMenuItem>
+                    {onEditProject && (
+                      <DropdownMenuItem
+                        onClick={() => onEditProject(project)}
+                      >
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit project
+                      </DropdownMenuItem>
+                    )}
+                    {onEditProject && onDeleteProject && (
+                      <DropdownMenuSeparator />
+                    )}
+                    {onDeleteProject && (
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => onDeleteProject(project.id)}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete project
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
