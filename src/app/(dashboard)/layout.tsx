@@ -1,4 +1,6 @@
 import { Sidebar } from "@/components/layout/sidebar";
+import { BottomNav } from "@/components/layout/bottom-nav";
+import { MobileHeader } from "@/components/layout/mobile-header";
 import { createClient } from "@/lib/supabase/server";
 
 async function getNavCounts() {
@@ -53,8 +55,24 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-screen">
-      <Sidebar projects={projects} counts={counts} />
-      <main className="flex-1 overflow-auto bg-background p-6">{children}</main>
+      {/* Sidebar - hidden on mobile */}
+      <div className="hidden md:block">
+        <Sidebar projects={projects} counts={counts} />
+      </div>
+
+      {/* Main content area */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Mobile header - visible only on mobile */}
+        <MobileHeader />
+
+        {/* Main content - padding-bottom on mobile for bottom nav */}
+        <main className="flex-1 overflow-auto bg-background p-4 pb-20 md:p-6 md:pb-6">
+          {children}
+        </main>
+      </div>
+
+      {/* Bottom nav - visible only on mobile */}
+      <BottomNav counts={counts} />
     </div>
   );
 }

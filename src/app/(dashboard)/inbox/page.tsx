@@ -34,12 +34,15 @@ export default async function InboxPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold text-foreground">Inbox</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Your tasks without a project
-      </p>
+      {/* Page header - hidden on mobile since MobileHeader shows title */}
+      <div className="hidden md:block">
+        <h1 className="text-2xl font-bold text-foreground">Inbox</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Your tasks without a project
+        </p>
+      </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-2 space-y-4 md:mt-6">
         <TodoList
           todos={todos ?? []}
           emptyMessage="No tasks in inbox. Add one below!"
