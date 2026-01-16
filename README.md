@@ -1,38 +1,53 @@
 <div align="center">
-  <img src="public/logo.png" alt="TaskFlow Logo" width="400" />
+  <img src="public/logo.png" alt="TodoIt Logo" width="400" />
 
-  <p><strong>A modern, Todoist-inspired todo application built with Next.js 15 and Supabase.</strong></p>
+  <h1>TodoIt</h1>
+
+  <p><strong>A clean, Todoist-inspired task management app built with Next.js 15 and Supabase.</strong></p>
 
   <p>
+    <a href="https://todoit-ecru.vercel.app">Live Demo</a> •
     <a href="#features">Features</a> •
     <a href="#setup">Setup</a> •
-    <a href="#tech-stack">Tech Stack</a> •
-    <a href="#license">License</a>
+    <a href="#tech-stack">Tech Stack</a>
+  </p>
+
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" alt="Next.js 15" />
+    <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase" alt="Supabase" />
+    <img src="https://img.shields.io/badge/Tailwind-4.0-38B2AC?logo=tailwindcss" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript" alt="TypeScript" />
   </p>
 </div>
 
 ---
 
-## Tech Stack
-
-- **Next.js 15** - App Router with React Server Components
-- **Supabase** - PostgreSQL database with Row Level Security
-- **TypeScript** - Full type safety with generated database types
-- **Tailwind CSS 4** - Utility-first styling
-- **Radix UI** - Accessible component primitives
-
 ## Features
 
-- Create, edit, and delete todos
-- Organize todos into projects
-- Priority levels (P1-P4)
-- Due dates with calendar picker
-- Today and Upcoming views
-- Inbox for quick capture
+- **Task Management** - Create, edit, complete, and delete tasks
+- **Projects** - Organize tasks into color-coded projects
+- **Smart Views** - Inbox, Today, and Upcoming views
+- **Priority Levels** - P1-P4 with color coding
+- **Due Dates** - Calendar picker for scheduling
+- **Mobile Responsive** - Bottom navigation for app-like mobile experience
+- **Dark Mode** - Beautiful dark theme by default
 
-## Important Notice
+## Tech Stack
 
-> **Demo Database Expiration**: The included Supabase demo database key will expire on **January 23rd, 2026**. After this date, you will need to set up your own Supabase project to use this application. See the Setup section below.
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 15 (App Router, Server Components) |
+| Database | Supabase (PostgreSQL) |
+| Styling | Tailwind CSS 4 |
+| Components | Radix UI / shadcn/ui |
+| Language | TypeScript |
+| Deployment | Vercel |
+
+## Screenshots
+
+<div align="center">
+  <p><em>Desktop and mobile views coming soon</em></p>
+</div>
 
 ## Setup
 
@@ -40,37 +55,38 @@
 
 - Node.js 18+
 - pnpm (recommended) or npm
+- Supabase account
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/spragginsdesigns/todo-app.git
    cd todo-app
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    pnpm install
    ```
 
-3. Set up environment variables:
+3. **Set up environment variables:**
    ```bash
    cp .env.example .env.local
    ```
 
-4. Configure your Supabase credentials in `.env.local`:
-   ```
+4. **Configure Supabase credentials in `.env.local`:**
+   ```env
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
    ```
 
-### Setting Up Your Own Supabase Project
+### Database Setup
 
 1. Create a free account at [supabase.com](https://supabase.com)
 2. Create a new project
-3. Run the migrations in `supabase/migrations/` against your database
-4. Copy your project URL and anon key from Settings > API
+3. Run the SQL migrations from `supabase/migrations/` in the SQL Editor
+4. Copy your project URL and anon key from **Settings > API**
 
 ### Development
 
@@ -80,7 +96,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Build
+### Production Build
 
 ```bash
 pnpm build
@@ -92,15 +108,26 @@ pnpm start
 ```
 todo-app/
 ├── src/
-│   ├── app/              # Next.js App Router pages
-│   ├── components/       # React components
+│   ├── app/                 # Next.js App Router
+│   │   ├── (dashboard)/     # Dashboard route group
+│   │   │   ├── inbox/       # Inbox page
+│   │   │   ├── today/       # Today view
+│   │   │   ├── upcoming/    # Upcoming view
+│   │   │   ├── projects/    # Projects list
+│   │   │   └── project/     # Individual project view
+│   │   └── actions/         # Server actions
+│   ├── components/
+│   │   ├── layout/          # Sidebar, bottom nav, headers
+│   │   ├── todos/           # Todo list and item components
+│   │   ├── projects/        # Project components
+│   │   └── ui/              # shadcn/ui components
 │   └── lib/
-│       └── supabase/     # Supabase client & types
+│       └── supabase/        # Supabase client & types
 ├── supabase/
-│   └── migrations/       # Database migrations
-└── public/               # Static assets
+│   └── migrations/          # Database migrations
+└── public/                  # Static assets & favicons
 ```
 
 ## License
 
-MIT
+MIT © [Austin Spraggins](https://github.com/spragginsdesigns)
