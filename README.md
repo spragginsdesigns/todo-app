@@ -1,6 +1,17 @@
-# Todo App
+<div align="center">
+  <img src="public/logo.png" alt="TaskFlow Logo" width="400" />
 
-A modern, Todoist-inspired todo application built with Next.js 15 and Supabase.
+  <p><strong>A modern, Todoist-inspired todo application built with Next.js 15 and Supabase.</strong></p>
+
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#setup">Setup</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#license">License</a>
+  </p>
+</div>
+
+---
 
 ## Tech Stack
 
@@ -34,7 +45,7 @@ A modern, Todoist-inspired todo application built with Next.js 15 and Supabase.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/todo-app.git
+   git clone https://github.com/spragginsdesigns/todo-app.git
    cd todo-app
    ```
 
