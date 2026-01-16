@@ -17,9 +17,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="flex items-center gap-3">
         <div
           className="flex h-8 w-8 items-center justify-center rounded-md"
-          style={{ backgroundColor: `${project.color}20` }}
+          style={{ backgroundColor: project.color ? `${project.color}20` : undefined }}
         >
-          <Hash className="h-4 w-4" style={{ color: project.color }} />
+          <Hash className="h-4 w-4" style={{ color: project.color ?? undefined }} />
         </div>
         <div>
           <h3 className="font-medium text-foreground">{project.name}</h3>
