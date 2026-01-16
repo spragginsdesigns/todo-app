@@ -6,13 +6,23 @@ const PAGE_TITLES: Record<string, string> = {
   "/inbox": "Inbox",
   "/today": "Today",
   "/upcoming": "Upcoming",
+  "/projects": "Projects",
 };
 
 export function MobileHeader() {
   const pathname = usePathname();
 
-  // Get page title or default to TodoIt
-  const pageTitle = PAGE_TITLES[pathname] || "TodoIt";
+  // Get page title - check static routes first, then handle dynamic routes
+  let pageTitle = PAGE_TITLES[pathname];
+
+  if (!pageTitle) {
+    // Handle project detail pages
+    if (pathname.startsWith("/project/")) {
+      pageTitle = "Project";
+    } else {
+      pageTitle = "TodoIt";
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">

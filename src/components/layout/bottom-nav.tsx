@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Inbox, Calendar, CalendarDays } from "lucide-react";
+import { Inbox, Calendar, CalendarDays, FolderKanban } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -73,6 +73,12 @@ export function BottomNav({ counts }: BottomNavProps) {
         icon={CalendarDays}
         count={counts?.upcoming}
         isActive={pathname === "/upcoming"}
+      />
+      <BottomNavItem
+        href="/projects"
+        label="Projects"
+        icon={FolderKanban}
+        isActive={pathname === "/projects" || pathname.startsWith("/project/")}
       />
     </nav>
   );
