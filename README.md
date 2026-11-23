@@ -6,7 +6,6 @@
   <p><strong>A clean, Todoist-inspired task management app built with Next.js 15 and Supabase.</strong></p>
 
   <p>
-    <a href="https://todoit-ecru.vercel.app">Live Demo</a> •
     <a href="#features">Features</a> •
     <a href="#setup">Setup</a> •
     <a href="#tech-stack">Tech Stack</a>
